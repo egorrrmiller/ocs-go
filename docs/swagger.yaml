@@ -1,0 +1,188 @@
+definitions:
+  dto.Line:
+    properties:
+      id:
+        description: |-
+          ID товара
+          example: b5f5f167-fa8d-4c1d-9c12-aa3b77b9e5f2
+        type: string
+      qty:
+        description: |-
+          Количество товара
+          example: 5
+        type: integer
+    type: object
+  dto.LineRequestDto:
+    properties:
+      id:
+        description: |-
+          ID товара
+          example: c7f5f167-fa8d-4c1d-9c12-aa3b77b9e5f3
+        type: string
+    type: object
+  dto.OrderRequestDto:
+    properties:
+      lines:
+        items:
+          $ref: '#/definitions/dto.Line'
+        type: array
+    type: object
+  dto.OrderResponseDto:
+    properties:
+      created:
+        description: |-
+          Время создания
+          example: 2023-10-05T12:00:00Z
+        type: string
+      id:
+        description: |-
+          ID заказа
+          example: a8f5f167-fa8d-4c1d-9c12-aa3b77b9e5f1
+        type: string
+      lines:
+        description: Список товаров
+        items:
+          $ref: '#/definitions/dto.Line'
+        type: array
+      status:
+        description: |-
+          Статус заказа
+          example: 1
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /lines:
+    post:
+      consumes:
+      - application/json
+      description: Создает новую запись товара в системе (независимо от заказов)
+      parameters:
+      - description: Данные товара
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.LineRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.LineRequestDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Добавить новый товар
+      tags:
+      - lines
+  /orders:
+    post:
+      consumes:
+      - application/json
+      description: Создает новый заказ с указанными товарами
+      parameters:
+      - description: Данные для создания заказа
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.OrderResponseDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Создать новый заказ
+      tags:
+      - orders
+  /orders/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет заказ по его идентификатору
+      parameters:
+      - description: UUID заказа
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Удалить заказ
+      tags:
+      - orders
+    get:
+      consumes:
+      - application/json
+      description: Возвращает информацию о заказе и его товарах
+      parameters:
+      - description: UUID заказа
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.OrderResponseDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Получить заказ по ID
+      tags:
+      - orders
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные заказа и его товары
+      parameters:
+      - description: UUID заказа
+        format: uuid
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Обновленные данные заказа
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.OrderRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.OrderResponseDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Обновить существующий заказ
+      tags:
+      - orders
+swagger: "2.0"

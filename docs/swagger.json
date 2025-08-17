@@ -1,0 +1,266 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/lines": {
+            "post": {
+                "description": "Создает новую запись товара в системе (независимо от заказов)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "lines"
+                ],
+                "summary": "Добавить новый товар",
+                "parameters": [
+                    {
+                        "description": "Данные товара",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.LineRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.LineRequestDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/orders": {
+            "post": {
+                "description": "Создает новый заказ с указанными товарами",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Создать новый заказ",
+                "parameters": [
+                    {
+                        "description": "Данные для создания заказа",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/orders/{id}": {
+            "get": {
+                "description": "Возвращает информацию о заказе и его товарах",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Получить заказ по ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "UUID заказа",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "put": {
+                "description": "Обновляет данные заказа и его товары",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Обновить существующий заказ",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "UUID заказа",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Обновленные данные заказа",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.OrderResponseDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Удаляет заказ по его идентификатору",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "orders"
+                ],
+                "summary": "Удалить заказ",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "UUID заказа",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dto.Line": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "ID товара\nexample: b5f5f167-fa8d-4c1d-9c12-aa3b77b9e5f2",
+                    "type": "string"
+                },
+                "qty": {
+                    "description": "Количество товара\nexample: 5",
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.LineRequestDto": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "ID товара\nexample: c7f5f167-fa8d-4c1d-9c12-aa3b77b9e5f3",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.OrderRequestDto": {
+            "type": "object",
+            "properties": {
+                "lines": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Line"
+                    }
+                }
+            }
+        },
+        "dto.OrderResponseDto": {
+            "type": "object",
+            "properties": {
+                "created": {
+                    "description": "Время создания\nexample: 2023-10-05T12:00:00Z",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID заказа\nexample: a8f5f167-fa8d-4c1d-9c12-aa3b77b9e5f1",
+                    "type": "string"
+                },
+                "lines": {
+                    "description": "Список товаров",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.Line"
+                    }
+                },
+                "status": {
+                    "description": "Статус заказа\nexample: 1",
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}
