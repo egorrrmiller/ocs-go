@@ -15,46 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/lines": {
-            "post": {
-                "description": "Создает новую запись товара в системе (независимо от заказов)",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "lines"
-                ],
-                "summary": "Добавить новый товар",
-                "parameters": [
-                    {
-                        "description": "Данные товара",
-                        "name": "input",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/dto.LineRequestDto"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/dto.LineRequestDto"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request"
-                    },
-                    "500": {
-                        "description": "Internal Server Error"
-                    }
-                }
-            }
-        },
         "/orders": {
             "post": {
                 "description": "Создает новый заказ с указанными товарами",
@@ -213,38 +173,56 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/products": {
+            "post": {
+                "description": "Создает новую запись товара в системе (независимо от заказов)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "products"
+                ],
+                "summary": "Добавить новый товар",
+                "parameters": [
+                    {
+                        "description": "Данные товара",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProductRequestDto"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ProductRequestDto"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "dto.Line": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "description": "ID товара\nexample: b5f5f167-fa8d-4c1d-9c12-aa3b77b9e5f2",
-                    "type": "string"
-                },
-                "qty": {
-                    "description": "Количество товара\nexample: 5",
-                    "type": "integer"
-                }
-            }
-        },
-        "dto.LineRequestDto": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "description": "ID товара\nexample: c7f5f167-fa8d-4c1d-9c12-aa3b77b9e5f3",
-                    "type": "string"
-                }
-            }
-        },
         "dto.OrderRequestDto": {
             "type": "object",
             "properties": {
-                "lines": {
+                "products": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Line"
+                        "$ref": "#/definitions/dto.Product"
                     }
                 }
             }
@@ -260,16 +238,34 @@ const docTemplate = `{
                     "description": "ID заказа\nexample: a8f5f167-fa8d-4c1d-9c12-aa3b77b9e5f1",
                     "type": "string"
                 },
-                "lines": {
+                "products": {
                     "description": "Список товаров",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/dto.Line"
+                        "$ref": "#/definitions/dto.Product"
                     }
+                }
+            }
+        },
+        "dto.Product": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "ID товара\nexample: b5f5f167-fa8d-4c1d-9c12-aa3b77b9e5f2",
+                    "type": "string"
                 },
-                "status": {
-                    "description": "Статус заказа\nexample: 1",
+                "qty": {
+                    "description": "Количество товара\nexample: 5",
                     "type": "integer"
+                }
+            }
+        },
+        "dto.ProductRequestDto": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "ID товара\nexample: c7f5f167-fa8d-4c1d-9c12-aa3b77b9e5f3",
+                    "type": "string"
                 }
             }
         }

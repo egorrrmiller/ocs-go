@@ -5,18 +5,18 @@ import "gorm.io/gorm"
 type Order interface {
 }
 
-type Line interface {
-	AddLine()
+type Product interface {
+	AddProduct()
 }
 
 type Repository struct {
 	Order
-	Line
+	Product
 }
 
 func NewRepository(db *gorm.DB) *Repository {
 	return &Repository{
-		Order: NewOrderRepository(db),
-		Line:  NewLineRepository(db),
+		Order:   NewOrderRepository(db),
+		Product: NewProductRepository(db),
 	}
 }

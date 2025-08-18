@@ -24,9 +24,9 @@ func (h *Handler) ConfigureRoutes(e *gin.Engine) {
 
 	e.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	line := e.Group("/lines")
+	product := e.Group("/products")
 	{
-		line.POST("/", h.AddLine)
+		product.POST("/", h.AddProduct)
 	}
 
 	order := e.Group("/orders")

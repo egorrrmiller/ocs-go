@@ -8,8 +8,7 @@ import (
 
 type Order struct {
 	Id        uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Status    int
-	Created   time.Time
+	Created   time.Time `gorm:"autoCreateTime"`
 	IsDeleted bool
-	Lines     []*Line
+	Items     []*OrderItem
 }

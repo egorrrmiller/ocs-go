@@ -1,30 +1,9 @@
 definitions:
-  dto.Line:
-    properties:
-      id:
-        description: |-
-          ID товара
-          example: b5f5f167-fa8d-4c1d-9c12-aa3b77b9e5f2
-        type: string
-      qty:
-        description: |-
-          Количество товара
-          example: 5
-        type: integer
-    type: object
-  dto.LineRequestDto:
-    properties:
-      id:
-        description: |-
-          ID товара
-          example: c7f5f167-fa8d-4c1d-9c12-aa3b77b9e5f3
-        type: string
-    type: object
   dto.OrderRequestDto:
     properties:
-      lines:
+      products:
         items:
-          $ref: '#/definitions/dto.Line'
+          $ref: '#/definitions/dto.Product'
         type: array
     type: object
   dto.OrderResponseDto:
@@ -39,46 +18,36 @@ definitions:
           ID заказа
           example: a8f5f167-fa8d-4c1d-9c12-aa3b77b9e5f1
         type: string
-      lines:
+      products:
         description: Список товаров
         items:
-          $ref: '#/definitions/dto.Line'
+          $ref: '#/definitions/dto.Product'
         type: array
-      status:
+    type: object
+  dto.Product:
+    properties:
+      id:
         description: |-
-          Статус заказа
-          example: 1
+          ID товара
+          example: b5f5f167-fa8d-4c1d-9c12-aa3b77b9e5f2
+        type: string
+      qty:
+        description: |-
+          Количество товара
+          example: 5
         type: integer
+    type: object
+  dto.ProductRequestDto:
+    properties:
+      id:
+        description: |-
+          ID товара
+          example: c7f5f167-fa8d-4c1d-9c12-aa3b77b9e5f3
+        type: string
     type: object
 info:
   contact: {}
 paths:
-  /lines:
-    post:
-      consumes:
-      - application/json
-      description: Создает новую запись товара в системе (независимо от заказов)
-      parameters:
-      - description: Данные товара
-        in: body
-        name: input
-        required: true
-        schema:
-          $ref: '#/definitions/dto.LineRequestDto'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/dto.LineRequestDto'
-        "400":
-          description: Bad Request
-        "500":
-          description: Internal Server Error
-      summary: Добавить новый товар
-      tags:
-      - lines
   /orders:
     post:
       consumes:
@@ -185,4 +154,30 @@ paths:
       summary: Обновить существующий заказ
       tags:
       - orders
+  /products:
+    post:
+      consumes:
+      - application/json
+      description: Создает новую запись товара в системе (независимо от заказов)
+      parameters:
+      - description: Данные товара
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ProductRequestDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.ProductRequestDto'
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+      summary: Добавить новый товар
+      tags:
+      - products
 swagger: "2.0"

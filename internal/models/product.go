@@ -4,6 +4,8 @@ import (
 	"github.com/google/uuid"
 )
 
-type Line struct {
+type Product struct {
 	Id uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+
+	OrderItems []*OrderItem `gorm:"foreignKey:ProductId"`
 }

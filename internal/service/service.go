@@ -9,18 +9,18 @@ type Order interface {
 	DeleteOrder()
 }
 
-type Line interface {
-	AddLine()
+type Product interface {
+	AddProduct()
 }
 
 type Service struct {
 	Order
-	Line
+	Product
 }
 
 func NewService(r *repository.Repository) *Service {
 	return &Service{
-		Line:  NewLineService(&r.Line),
-		Order: NewOrderService(&r.Order),
+		Product: NewProductService(&r.Product),
+		Order:   NewOrderService(&r.Order),
 	}
 }

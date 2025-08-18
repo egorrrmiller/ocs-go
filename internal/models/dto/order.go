@@ -1,6 +1,7 @@
 package dto
 
 import (
+	"ocs-go/internal/models"
 	"time"
 
 	"github.com/google/uuid"
@@ -8,7 +9,7 @@ import (
 
 // swagger:model OrderRequestDto
 type OrderRequestDto struct {
-	Lines []Line `json:"lines"`
+	Products []Product `json:"products"`
 }
 
 // swagger:model OrderResponseDto
@@ -17,25 +18,36 @@ type OrderResponseDto struct {
 	// example: a8f5f167-fa8d-4c1d-9c12-aa3b77b9e5f1
 	Id uuid.UUID `json:"id"`
 
-	// Статус заказа
-	// example: 1
-	Status int `json:"status"`
-
 	// Время создания
 	// example: 2023-10-05T12:00:00Z
 	Created time.Time `json:"created"`
 
 	// Список товаров
-	Lines []Line `json:"lines"`
+	Products []Product `json:"products"`
 }
 
-// swagger:model Line
-type Line struct {
+// swagger:model Product
+type Product struct {
 	// ID товара
 	// example: b5f5f167-fa8d-4c1d-9c12-aa3b77b9e5f2
-	LineId uuid.UUID `json:"id"`
+	ProductId uuid.UUID `json:"id"`
 
 	// Количество товара
 	// example: 5
 	Quality int `json:"qty"`
+}
+
+func (o *OrderRequestDto) MapToModel() *models.Order {
+	products := make([]*models.OrderItem, len(o.Products))
+
+	for _, product := range o.Products {
+		products = append(products, &models.OrderItem{
+			Id: product.ProductId,
+		})
+	}
+
+	return &models.Order{
+		IsDeleted: false,
+		Items:     products,
+	}
 }
