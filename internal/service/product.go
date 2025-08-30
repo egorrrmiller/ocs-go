@@ -3,7 +3,7 @@ package service
 import "ocs-go/internal/repository"
 
 type ProductService struct {
-	repository *repository.Product
+	repository repository.Product
 }
 
 func (s *ProductService) AddProduct() {
@@ -11,7 +11,7 @@ func (s *ProductService) AddProduct() {
 	panic("implement me")
 }
 
-func NewProductService(repository *repository.Product) *ProductService {
+func NewProductService(repository repository.Product) *ProductService {
 	return &ProductService{
 		repository: repository,
 	}

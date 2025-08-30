@@ -1,6 +1,13 @@
 package handler
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+	"ocs-go/internal/models/dto"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/sirupsen/logrus"
+)
 
 // GetOrder godoc
 // @Summary Получить заказ по ID
@@ -14,7 +21,16 @@ import "github.com/gin-gonic/gin"
 // @Failure 500
 // @Router /orders/{id} [get]
 func (h *Handler) GetOrder(c *gin.Context) {
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		logrus.Error("Invalid Id")
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
 
+	result := h.service.GetOrder(id)
+
+	c.JSON(http.StatusOK, result)
 }
 
 // AddOrder godoc
@@ -29,7 +45,25 @@ func (h *Handler) GetOrder(c *gin.Context) {
 // @Failure 500
 // @Router /orders [post]
 func (h *Handler) AddOrder(c *gin.Context) {
+	var requestDto dto.OrderRequestDto
 
+	if err := c.ShouldBindJSON(&requestDto); err != nil {
+		logrus.Error("Invalid Order")
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	order := requestDto.MapToModel()
+
+	err := h.service.AddOrder(order)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, nil)
 }
 
 // UpdateOrder godoc
@@ -45,7 +79,17 @@ func (h *Handler) AddOrder(c *gin.Context) {
 // @Failure 500
 // @Router /orders/{id} [put]
 func (h *Handler) UpdateOrder(c *gin.Context) {
+	var requestDto dto.OrderRequestDto
 
+	if err := c.ShouldBindJSON(&requestDto); err != nil {
+		logrus.Error("Invalid Order")
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	order := requestDto.MapToModel()
+	h.service.UpdateOrder(order)
+	c.JSON(http.StatusOK, nil)
 }
 
 // DeleteOrder godoc
@@ -60,5 +104,14 @@ func (h *Handler) UpdateOrder(c *gin.Context) {
 // @Failure 500
 // @Router /orders/{id} [delete]
 func (h *Handler) DeleteOrder(c *gin.Context) {
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		logrus.Error("Invalid Id")
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
 
+	h.service.DeleteOrder(id)
+
+	c.JSON(http.StatusOK, nil)
 }

@@ -1,13 +1,8 @@
 package service
 
-import "ocs-go/internal/repository"
-
-type Order interface {
-	GetOrder()
-	AddOrder()
-	UpdateOrder()
-	DeleteOrder()
-}
+import (
+	"ocs-go/internal/repository"
+)
 
 type Product interface {
 	AddProduct()
@@ -20,7 +15,7 @@ type Service struct {
 
 func NewService(r *repository.Repository) *Service {
 	return &Service{
-		Product: NewProductService(&r.Product),
-		Order:   NewOrderService(&r.Order),
+		Product: NewProductService(r.Product),
+		Order:   NewOrderService(r.Order),
 	}
 }

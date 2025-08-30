@@ -1,13 +1,8 @@
 package repository
 
-import "gorm.io/gorm"
-
-type Order interface {
-}
-
-type Product interface {
-	AddProduct()
-}
+import (
+	"gorm.io/gorm"
+)
 
 type Repository struct {
 	Order

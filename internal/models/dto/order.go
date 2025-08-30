@@ -34,20 +34,23 @@ type Product struct {
 
 	// Количество товара
 	// example: 5
-	Quality int `json:"qty"`
+	Quantity int `json:"qty"`
 }
 
-func (o *OrderRequestDto) MapToModel() *models.Order {
-	products := make([]*models.OrderItem, len(o.Products))
+func (o *OrderRequestDto) MapToModel() models.Order {
+	products := make([]models.OrderProducts, 0)
+	orderId := uuid.New()
 
 	for _, product := range o.Products {
-		products = append(products, &models.OrderItem{
-			Id: product.ProductId,
+		products = append(products, models.OrderProducts{
+			OrderId:   orderId,
+			ProductId: product.ProductId,
+			Quantity:  product.Quantity,
 		})
 	}
 
-	return &models.Order{
-		IsDeleted: false,
-		Items:     products,
+	return models.Order{
+		Id:       orderId,
+		Products: products,
 	}
 }
