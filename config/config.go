@@ -1,32 +1,58 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"fmt"
+
+	"github.com/spf13/viper"
+)
+
+type Consumer struct {
+	Name string `mapstructure:"name"`
+}
+
+type Producer struct {
+	Name string `mapstructure:"name"`
+}
+
+type KafkaConfig struct {
+	Brokers       []string   `mapstructure:"brokers"`
+	Consumers     []Consumer `mapstructure:"consumers"`
+	Producers     []Producer `mapstructure:"producers"`
+	ConsumerGroup string     `mapstructure:"consumer_group"`
+}
+
+type DBConfig struct {
+	Host     string `mapstructure:"host"`
+	Port     string `mapstructure:"port"`
+	User     string `mapstructure:"user"`
+	Password string `mapstructure:"password"`
+	Name     string `mapstructure:"name"`
+	SSLMode  string `mapstructure:"ssl_mode"`
+}
 
 type Config struct {
-	DBHost     string `mapstructure:"DB_HOST"`
-	DBPort     string `mapstructure:"DB_PORT"`
-	DBUser     string `mapstructure:"DB_USER"`
-	DBPassword string `mapstructure:"DB_PASSWORD"`
-	DBName     string `mapstructure:"DB_NAME"`
-	DBSSLMode  string `mapstructure:"DB_SSLMODE"`
-	Port       string `mapstructure:"PORT"`
+	Port     string      `mapstructure:"port"`
+	Kafka    KafkaConfig `mapstructure:"kafka"`
+	Database DBConfig    `mapstructure:"database"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
+	viper.SetConfigName("config")
+	viper.SetConfigType("json")
 	viper.AddConfigPath(path)
-	viper.SetConfigName("ocs")
-	viper.SetConfigType("env")
 
-	viper.AutomaticEnv()
+	// Устанавливаем значения по умолчанию
+	viper.SetDefault("port", "8080")
+	viper.SetDefault("database.ssl_mode", "disable")
+	viper.SetDefault("brokers.consumer_group", "ocs-go")
 
-	viper.SetDefault("Port", "8080")
-	viper.SetDefault("DB_SSLMODE", "disable")
-
-	err = viper.ReadInConfig()
-	if err != nil {
-		return
+	if err := viper.ReadInConfig(); err != nil {
+		return config, fmt.Errorf("error reading config file: %w", err)
 	}
 
-	err = viper.Unmarshal(&config)
+	if err := viper.Unmarshal(&config); err != nil {
+		return config, fmt.Errorf("error unmarshaling config: %w", err)
+	}
+
 	return
 }

@@ -1,0 +1,27 @@
+{
+  "port": "7227",
+  "kafka": {
+    "brokers": [
+      "localhost:9092"
+    ],
+    "consumer-group": "ocs_dev",
+    "consumers": [
+      {
+        "name": "products"
+      }
+    ],
+    "producers": [
+      {
+        "name": "products"
+      }
+    ]
+  },
+  "database": {
+    "host": "localhost",
+    "port": "5432",
+    "user": "postgres",
+    "password": "1",
+    "name": "ocs",
+    "ssl_mode": "disable"
+  }
+}
