@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"ocs-go/config"
-	"ocs-go/internal/models/brokers"
+	kafkaModel "ocs-go/internal/model/kafka"
 	"time"
 
 	"github.com/google/uuid"
@@ -35,7 +35,7 @@ func kafkaMock(config config.KafkaConfig) {
 	ctx := context.Background()
 
 	idProduct, _ := uuid.NewUUID()
-	data, _ := json.Marshal(brokers.Product{
+	data, _ := json.Marshal(kafkaModel.Product{
 		Id:          idProduct,
 		Name:        fmt.Sprintf("name %s", idProduct),
 		Description: fmt.Sprintf("description %s", idProduct),

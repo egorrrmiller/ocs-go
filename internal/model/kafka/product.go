@@ -1,4 +1,4 @@
-package brokers
+package kafka
 
 import "github.com/google/uuid"
 

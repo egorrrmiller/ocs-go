@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"ocs-go/internal/models/database"
+	"ocs-go/internal/model/db"
 
 	"github.com/google/uuid"
 )
@@ -13,8 +13,8 @@ type ProductRequestDto struct {
 	Id uuid.UUID `json:"id"`
 }
 
-func (l *ProductRequestDto) MapToModel() database.Product {
-	return database.Product{
+func (l *ProductRequestDto) MapToModel() db.Product {
+	return db.Product{
 		Id: l.Id,
 	}
 }

@@ -2,7 +2,7 @@ package handler
 
 import (
 	"net/http"
-	"ocs-go/internal/models/dto"
+	"ocs-go/internal/handler/dto"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"

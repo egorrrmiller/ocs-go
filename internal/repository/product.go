@@ -1,20 +1,20 @@
 package repository
 
 import (
-	"ocs-go/internal/models/database"
+	"ocs-go/internal/model/db"
 
 	"gorm.io/gorm"
 )
 
 type Product interface {
-	AddProduct(product database.Product)
+	AddProduct(product db.Product)
 }
 
 type ProductRepository struct {
 	db *gorm.DB
 }
 
-func (r ProductRepository) AddProduct(product database.Product) {
+func (r ProductRepository) AddProduct(product db.Product) {
 	r.db.Create(&product)
 }
 

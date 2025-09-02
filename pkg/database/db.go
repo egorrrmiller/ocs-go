@@ -3,7 +3,7 @@ package database
 import (
 	"fmt"
 	"ocs-go/config"
-	"ocs-go/internal/models/database"
+	model "ocs-go/internal/model/db"
 
 	"github.com/sirupsen/logrus"
 	"gorm.io/driver/postgres"
@@ -17,7 +17,7 @@ func InitDb(config config.Config) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	if err := db.AutoMigrate(&database.Product{}, &database.Order{}, &database.OrderProducts{}); err != nil {
+	if err := db.AutoMigrate(&model.Product{}, &model.Order{}, &model.OrderProducts{}); err != nil {
 		logrus.Fatal(err.Error())
 	}
 

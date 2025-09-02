@@ -1,16 +1,16 @@
 package service
 
 import (
-	"ocs-go/internal/models/database"
+	"ocs-go/internal/model/db"
 	"ocs-go/internal/repository"
 
 	"github.com/google/uuid"
 )
 
 type Order interface {
-	GetOrder(id uuid.UUID) database.Order
-	AddOrder(order database.Order) error
-	UpdateOrder(order database.Order)
+	GetOrder(id uuid.UUID) db.Order
+	AddOrder(order db.Order) error
+	UpdateOrder(order db.Order)
 	DeleteOrder(id uuid.UUID)
 }
 
@@ -24,15 +24,15 @@ func NewOrderService(repository repository.Order) *OrderService {
 	}
 }
 
-func (s *OrderService) GetOrder(id uuid.UUID) database.Order {
+func (s *OrderService) GetOrder(id uuid.UUID) db.Order {
 	return s.repository.GetOrder(id)
 }
 
-func (s *OrderService) AddOrder(order database.Order) error {
+func (s *OrderService) AddOrder(order db.Order) error {
 	return s.repository.AddOrder(order)
 }
 
-func (s *OrderService) UpdateOrder(order database.Order) {
+func (s *OrderService) UpdateOrder(order db.Order) {
 	s.repository.UpdateOrder(order)
 }
 

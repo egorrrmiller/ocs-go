@@ -44,7 +44,7 @@ func LoadConfig(path string) (config Config, err error) {
 	// Устанавливаем значения по умолчанию
 	viper.SetDefault("port", "8080")
 	viper.SetDefault("database.ssl_mode", "disable")
-	viper.SetDefault("brokers.consumer_group", "ocs-go")
+	viper.SetDefault("kafka.consumer_group", "ocs-go")
 
 	if err := viper.ReadInConfig(); err != nil {
 		return config, fmt.Errorf("error reading config file: %w", err)

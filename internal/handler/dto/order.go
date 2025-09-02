@@ -1,7 +1,7 @@
 package dto
 
 import (
-	"ocs-go/internal/models/database"
+	"ocs-go/internal/model/db"
 	"time"
 
 	"github.com/google/uuid"
@@ -37,19 +37,19 @@ type Product struct {
 	Quantity int `json:"qty"`
 }
 
-func (o *OrderRequestDto) MapToModel() database.Order {
-	products := make([]database.OrderProducts, 0)
+func (o *OrderRequestDto) MapToModel() db.Order {
+	products := make([]db.OrderProducts, 0)
 	orderId := uuid.New()
 
 	for _, product := range o.Products {
-		products = append(products, database.OrderProducts{
+		products = append(products, db.OrderProducts{
 			OrderId:   orderId,
 			ProductId: product.ProductId,
 			Quantity:  product.Quantity,
 		})
 	}
 
-	return database.Order{
+	return db.Order{
 		Id:       orderId,
 		Products: products,
 	}
