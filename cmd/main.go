@@ -72,7 +72,6 @@ func main() {
 
 	<-ctx.Done()
 
-	// закрываем сервер сразу, без таймаута
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer shutdownCancel()
 	if err := server.Shutdown(shutdownCtx); err != nil {
