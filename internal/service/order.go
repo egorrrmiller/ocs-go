@@ -7,13 +7,6 @@ import (
 	"github.com/google/uuid"
 )
 
-type Order interface {
-	GetOrder(id uuid.UUID) db.Order
-	AddOrder(order db.Order) error
-	UpdateOrder(order db.Order)
-	DeleteOrder(id uuid.UUID)
-}
-
 type OrderService struct {
 	repository repository.Order
 }

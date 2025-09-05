@@ -1,29 +1,27 @@
 package main
 
 import (
-	"ocs-go/config"
+	_ "ocs-go/docs"
 	"ocs-go/internal/handler"
-	"ocs-go/internal/repository"
 	"ocs-go/internal/service"
-	"ocs-go/pkg/database"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-func Run(port string, config config.Config) error {
-	db, err := database.InitDb(config)
-	if err != nil {
-		logrus.Fatal(err)
-	}
+func NewRouter(productService *service.ProductService, orderService *service.OrderService) *gin.Engine {
+	engine := gin.New()
 
-	newRepository := repository.NewRepository(db)
-	newService := service.NewService(newRepository)
-	newHandler := handler.NewHandler(newService)
+	engine.Use(gin.Logger(), gin.Recovery())
 
-	router := gin.New()
+	engine.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	newHandler.ConfigureRoutes(router)
+	productHandlers := handler.NewProductHandler(productService)
+	productHandlers.ConfigureRoutes(engine)
 
-	return router.Run(":" + port)
+	orderHandlers := handler.NewOrderHandler(orderService)
+	orderHandlers.ConfigureRoutes(engine)
+
+	return engine
 }

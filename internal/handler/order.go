@@ -3,11 +3,30 @@ package handler
 import (
 	"net/http"
 	"ocs-go/internal/handler/dto"
+	"ocs-go/internal/service"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/sirupsen/logrus"
 )
+
+type OrderHandler struct {
+	orderService *service.OrderService
+}
+
+func NewOrderHandler(orderService *service.OrderService) *OrderHandler {
+	return &OrderHandler{orderService: orderService}
+}
+
+func (h *OrderHandler) ConfigureRoutes(e *gin.Engine) {
+	order := e.Group("/orders")
+	{
+		order.GET("/:id", h.GetOrder)
+		order.POST("/", h.AddOrder)
+		order.PUT("/:id", h.UpdateOrder)
+		order.DELETE("/:id", h.DeleteOrder)
+	}
+}
 
 // GetOrder godoc
 // @Summary Получить заказ по ID
@@ -20,7 +39,7 @@ import (
 // @Failure 400
 // @Failure 500
 // @Router /orders/{id} [get]
-func (h *Handler) GetOrder(c *gin.Context) {
+func (h *OrderHandler) GetOrder(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		logrus.Error("Invalid Id")
@@ -28,7 +47,7 @@ func (h *Handler) GetOrder(c *gin.Context) {
 		return
 	}
 
-	result := h.service.GetOrder(id)
+	result := h.orderService.GetOrder(id)
 
 	c.JSON(http.StatusOK, result)
 }
@@ -44,7 +63,7 @@ func (h *Handler) GetOrder(c *gin.Context) {
 // @Failure 400
 // @Failure 500
 // @Router /orders [post]
-func (h *Handler) AddOrder(c *gin.Context) {
+func (h *OrderHandler) AddOrder(c *gin.Context) {
 	var requestDto dto.OrderRequestDto
 
 	if err := c.ShouldBindJSON(&requestDto); err != nil {
@@ -55,7 +74,7 @@ func (h *Handler) AddOrder(c *gin.Context) {
 
 	order := requestDto.MapToModel()
 
-	err := h.service.AddOrder(order)
+	err := h.orderService.AddOrder(order)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": err.Error(),
@@ -78,7 +97,7 @@ func (h *Handler) AddOrder(c *gin.Context) {
 // @Failure 400
 // @Failure 500
 // @Router /orders/{id} [put]
-func (h *Handler) UpdateOrder(c *gin.Context) {
+func (h *OrderHandler) UpdateOrder(c *gin.Context) {
 	var requestDto dto.OrderRequestDto
 
 	if err := c.ShouldBindJSON(&requestDto); err != nil {
@@ -88,7 +107,7 @@ func (h *Handler) UpdateOrder(c *gin.Context) {
 	}
 
 	order := requestDto.MapToModel()
-	h.service.UpdateOrder(order)
+	h.orderService.UpdateOrder(order)
 	c.JSON(http.StatusOK, nil)
 }
 
@@ -103,7 +122,7 @@ func (h *Handler) UpdateOrder(c *gin.Context) {
 // @Failure 400
 // @Failure 500
 // @Router /orders/{id} [delete]
-func (h *Handler) DeleteOrder(c *gin.Context) {
+func (h *OrderHandler) DeleteOrder(c *gin.Context) {
 	id, err := uuid.Parse(c.Param("id"))
 	if err != nil {
 		logrus.Error("Invalid Id")
@@ -111,7 +130,7 @@ func (h *Handler) DeleteOrder(c *gin.Context) {
 		return
 	}
 
-	h.service.DeleteOrder(id)
+	h.orderService.DeleteOrder(id)
 
 	c.JSON(http.StatusOK, nil)
 }
